@@ -3,6 +3,7 @@
 
 int speed = 50;
 bool turn = false;
+int threshold = 300;
 char com[20] = "rlrrl";
 int index = 0;
 int i;
@@ -14,35 +15,83 @@ void setup() {
 }
 
 void loop() {
-  button.waitForButton()
-  for(i=0;i<20;i++){
+  function();
+}
 
-    motors.setSpeeds(speed, speed);
+
+void function(void){
+  index = 0;
+  button.waitForButton();
+  while(1){
+    reflector();
     reflectances.update();
-    if (reflectances.value(2) > 300 || reflectances.value(5) > 300) {
-      delay(1000);
-      speed = 0;
+    if (reflectances.value(2) > threshold || reflectances.value(5) > threshold) {
+      delay(950);
+      motors.setSpeeds(0,0);
       turn = true;
-    }else{
-      if (turn == false){
-        speed = 50;
-      }
     }
-    if (turn == true){
+    if (!turn){
+      motors.setSpeeds(speed, speed);
+    }else{
+      // motors.setSpeeds(0,0);
       if (com[index] == '\0'){
-        motors.setSpeeds(0,0);
-      }else{
-        if (com[index] == 'r'){
-          motors.setSpeeds(100,-100);
-        }else{
-          motors.setSpeeds(-100,100);
-        }
-        delay(1500);
-        motors.setSpeeds(0,0);
         turn = false;
-        index += 1;
+        break;
       }
+      else if (com[index] == 'r'){
+        motors.setSpeeds(100,-100);
+        
+        while(1){
+          reflectances.update();
+          if (reflectances.value(5) > threshold || reflectances.value(6) > threshold){
+          break;
+          }
+        }
+        while(1){
+          reflectances.update();
+          if(reflectances.value(3) > threshold ){
+            break;
+          }
+        }
+      }
+      else if (com[index] == 'l'){
+        motors.setSpeeds(-100,100);
+        while(1){
+          reflectances.update();
+          if (reflectances.value(1) > threshold || reflectances.value(2) > threshold){
+          break;
+          }
+        }
+        while(1){
+          reflectances.update();
+          if(reflectances.value(4) > threshold){
+            break;
+          }
+        }
+      }
+      // delay(1600); 
+
+
+      motors.setSpeeds(0,0);
+
+      turn = false;
+      index += 1;
     }
   }
-  
+}
+
+void reflector(void){
+  Serial.print(reflectances.value(1));
+  Serial.print(',');
+  Serial.print(reflectances.value(2));
+  Serial.print(',');  
+  Serial.print(reflectances.value(3));
+  Serial.print(',');
+  Serial.print(reflectances.value(4));
+  Serial.print(',');  
+  Serial.print(reflectances.value(5));
+  Serial.print(',');  
+  Serial.print(reflectances.value(6));
+  Serial.print(',');    
+  Serial.println();
 }
