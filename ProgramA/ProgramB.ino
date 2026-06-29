@@ -1,29 +1,29 @@
 #include <Wire.h>
 #include <ZumoShieldN.h>
 
-int speed = 50;
-bool turn = false;
-int threshold = 300;
-char com[20] = "rlfrrl";
-int index = 0;
-int i;
+// int speed = 50;
+// bool turn = false;
+// int threshold = 300;
+// char com[20] = "rlfrrl";
+// int index;
+// int i;
 
-void setup() {
-  buzzer.playOn();
-  Serial.begin(9600);
-  Serial.println("Zumo sample Start!");
-}
+// void setup() {
+//   buzzer.playOn();
+//   Serial.begin(9600);
+//   Serial.println("Zumo sample Start!");
+// }
 
-void loop() {
-  function();
-}
+// void loop() {
+//   function();
+// }
 
 
 void function(void){
   index = 0;
   button.waitForButton();
   while(1){
-    reflector();
+    // reflector();
     reflectances.update();
     if (reflectances.value(2) > threshold || reflectances.value(5) > threshold) {
       if(com[index]=='f'){
@@ -90,18 +90,18 @@ void function(void){
   }
 }
 
-void reflector(void){
-  Serial.print(reflectances.value(1));
-  Serial.print(',');
-  Serial.print(reflectances.value(2));
-  Serial.print(',');  
-  Serial.print(reflectances.value(3));
-  Serial.print(',');
-  Serial.print(reflectances.value(4));
-  Serial.print(',');  
-  Serial.print(reflectances.value(5));
-  Serial.print(',');  
-  Serial.print(reflectances.value(6));
-  Serial.print(',');    
-  Serial.println();
-}
+// void reflector(void){
+//   Serial.print(reflectances.value(1));
+//   Serial.print(',');
+//   Serial.print(reflectances.value(2));
+//   Serial.print(',');  
+//   Serial.print(reflectances.value(3));
+//   Serial.print(',');
+//   Serial.print(reflectances.value(4));
+//   Serial.print(',');  
+//   Serial.print(reflectances.value(5));
+//   Serial.print(',');  
+//   Serial.print(reflectances.value(6));
+//   Serial.print(',');    
+//   Serial.println();
+// }

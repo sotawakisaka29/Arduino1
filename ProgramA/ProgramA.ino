@@ -1,8 +1,17 @@
 #include <Wire.h>
 #include <ZumoShieldN.h>
+
 #define MAX_COMMAND 20
 
-char command[MAX_COMMAND];
+int speed = 50;
+bool turn = false;
+int threshold = 300;
+// char com[20] = "rlfrrl";
+int index = 0;
+int i;
+
+
+char com[MAX_COMMAND];
 int cmdIndex = 0;
 
 void setup() {
@@ -19,7 +28,7 @@ void setup() {
 }
 
 void loop() {
-
+  function();
 }
 
 
@@ -31,7 +40,7 @@ void getCommand(void){
       char input = Serial.read();
 
       if (input == '\n' || input == '\r') {
-              continue;
+        continue;
       }
 
       if (cmdIndex >= MAX_COMMAND) {
@@ -44,12 +53,12 @@ void getCommand(void){
         Serial.println("Delete All Command!");
       }
       else if (input == 'r' || input == 'l' || input == 'f') {
-        command[cmdIndex++] = input;
+        com[cmdIndex++] = input;
       }
       else if (input == '.') {
-        command[cmdIndex] = '\0';
+        com[cmdIndex] = '\0';
         Serial.print("Command: ");
-        Serial.println(command);
+        Serial.println(com);
         break;  // ← 入力完了で抜ける
       }
       else {
