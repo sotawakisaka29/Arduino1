@@ -42,14 +42,7 @@ void function(void){
       }
     }
     if (!turn){
-      int error = reflectances.value(3) - reflectances.value(4);
-      int correction = error / 10;
-      motors.setSpeeds(
-        speed - correction,
-        speed + correction
-      );
-
-      // motors.setSpeeds(speed, speed);
+      motors.setSpeeds(speed, speed);
     }else{
       // motors.setSpeeds(0,0);
       if (com[index] == '\0'){
