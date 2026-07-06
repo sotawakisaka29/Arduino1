@@ -2,11 +2,12 @@
 #include <ZumoShieldN.h>
 
 // int speed = 50;
-// bool turn = false;
+bool turn = false;
 // int threshold = 300;
 // char com[20] = "rlfrrl";
 // int index;
 // int i;
+
 
 // void setup() {
 //   buzzer.playOn();
@@ -89,6 +90,17 @@ void function(void){
     }
   }
 }
+
+//*********
+
+// void correction(void){
+//   while(1){
+//     reflectances.update();
+//     if(reflectances.value(1) > threshold)
+//   }
+// }
+
+//*********
 
 // void reflector(void){
 //   Serial.print(reflectances.value(1));

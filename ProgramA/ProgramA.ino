@@ -4,11 +4,32 @@
 #define MAX_COMMAND 20
 
 int speed = 50;
-bool turn = false;
 int threshold = 300;
-// char com[20] = "rlfrrl";
 int index = 0;
 int i;
+
+const int width = 3;
+const int height = 3;
+
+struct Vec {
+  int x;
+  int y;
+};
+
+const int R[2][2] = {
+  {0,1},
+  {-1,0}
+};
+
+const int L[2][2] = {
+  {0, -1},
+  {1, 0}
+};
+
+const int F[2][2] = {
+  {1, 0},
+  {0, 1}
+};
 
 
 char com[MAX_COMMAND];
@@ -25,6 +46,48 @@ void setup() {
   button.waitForButton();
 
   buzzer.playOn();
+}
+
+void turnFunc(const int M[2][2], Vec *v){
+  int nx = M[0][0] * v->x + M[0][1] * v->y;
+  int ny = M[1][0] * v->x + M[1][1] * v->y;
+
+  v->x = nx;  //(v*).xと同じ
+  v->y = ny;  //(v*).yと同じ
+}
+
+bool judge(){
+  Vec pos = {0, 0};  // P0
+  Vec dir = {0, 1};  // r0
+
+  for(int i = 0; i < cmdIndex; i++){
+    switch(com[i])
+    {
+      case 'r':
+        turnFunc(R, &dir);  //&dirはdirが入ってるポインタ
+        break;
+
+      case 'l':
+        turnFunc(L, &dir);
+        break;
+
+      case 'f':
+        turnFunc(F, &dir);
+        break;
+    }
+
+    pos.x += dir.x;
+    pos.y += dir.y;
+
+    // ここにコースアウト条件を書く
+    if(pos.x < 0 || pos.x > width ||
+       pos.y < 0 || pos.y > height)
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 void loop() {
@@ -53,13 +116,32 @@ void getCommand(void){
         Serial.println("Delete All Command!");
       }
       else if (input == 'r' || input == 'l' || input == 'f') {
+
+        // 一旦コマンドを追加
         com[cmdIndex++] = input;
+        com[cmdIndex] = '\0';
+
+        // 追加後の状態で判定
+        if (!judge()) {
+          Serial.println("ERROR : Course Out!");
+
+          // 追加したコマンドを取り消す
+          cmdIndex--;
+          com[cmdIndex] = '\0';
+
+          Serial.println("Re-Input Command!");
+        }else {
+          Serial.print("Current Command : ");
+          Serial.println(com);
+        }
+
       }
       else if (input == '.') {
         com[cmdIndex] = '\0';
-        Serial.print("Command: ");
+
+        Serial.print("Command : ");
         Serial.println(com);
-        break;  // ← 入力完了で抜ける
+        break;
       }
       else {
         Serial.println("Wrong Command!");
@@ -67,3 +149,5 @@ void getCommand(void){
     }
   }
 }
+
+
